@@ -1,706 +1,381 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Multi Downloader - Mamz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-deep: #080808;
+            --card-surface: #1e1e1e;
+            --text-on-dark: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: linear-gradient(45deg, #8b5cf6, #f97316, #3b82f6);
+            --accent-solid: #8b5cf6;
+            --radius-box: 24px;
+        }
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
+        }
+        body {
+            background: var(--bg-deep);
+            color: var(--text-on-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+        .app-frame {
+            width: 100%; max-width: 480px; height: 100vh;
+            background: var(--bg-main);
+            position: relative; display: flex; flex-direction: column;
+            overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        @media(min-width: 500px) {
+            body { align-items: center; }
+            .app-frame { height: 95vh; border-radius: 35px; border: 4px solid #333; }
+        }
+        
+        .header-area {
+            padding: 20px 24px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo-text {
+            font-weight: 800;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .btn-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-on-dark); display: flex; align-items: center; justify-content: center;
+            font-size: 18px; cursor: pointer; transition: 0.2s; position: relative;
+        }
+        
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px 80px;
+            scrollbar-width: none;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-area::-webkit-scrollbar { display: none; }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1000;
+            display: none; justify-content: flex-start;
+        }
+        .sidebar-menu {
+            width: 80%; max-width: 300px; height: 100%;
+            background: var(--card-surface); padding: 30px 20px;
+            transform: translateX(-100%); transition: transform 0.3s ease;
+        }
+        .sidebar-menu.open { transform: translateX(0); }
 
-<title>DOKS DOWNLOADER</title>
+        .brand-box { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .profile-section { display: flex; align-items: center; gap: 12px; }
+        .p-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #8b5cf6; object-fit: cover; }
+        .p-info h2 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+        .p-info p { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+        .status-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; }
+        
+        .marquee-container {
+            background: #151515; border-radius: 10px; overflow: hidden; white-space: nowrap;
+            padding: 10px 0; border-left: 3px solid #f97316; margin-top: 12px;
+        }
+        .marquee-text {
+            display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite;
+            font-size: 11px; color: var(--text-muted); font-family: monospace;
+        }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        .sosmed-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+        .sos-btn {
+            background: var(--card-surface); border-radius: 14px; padding: 12px 4px;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;
+        }
+        .sos-btn i { font-size: 22px; }
+        .sos-btn span { font-size: 9px; font-weight: 700; color: var(--text-muted); }
+        .sos-btn.active { background: var(--accent); border: none; }
+        .sos-btn.active span { color: white; }
 
-<link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+        .tab-bar { display: flex; gap: 8px; margin-bottom: 20px; background: var(--card-surface); padding: 5px; border-radius: 14px; }
+        .tab {
+            flex: 1; text-align: center; padding: 12px 0; border-radius: 10px; font-size: 12px; font-weight: 700;
+            cursor: pointer; transition: 0.2s; color: var(--text-muted);
+        }
+        .tab.active { background: var(--bg-main); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        .form-card { background: var(--card-surface); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.03); }
+        .menu-title { font-size: 12px; font-weight: 800; margin-bottom: 18px; color: var(--text-on-dark); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase; }
+        .input-group input, .input-group select { 
+            width: 100%; padding: 14px 16px; background: #151515; border: 1px solid #333; 
+            border-radius: 12px; color: white; font-size: 13px; outline: none; transition: 0.3s;
+        }
+        .input-group input:focus, .input-group select:focus { border-color: var(--accent-solid); }
+        
+        .btn-primary {
+            width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 12px;
+            color: white; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+        }
 
-<style>
+        .result-card { 
+            background: var(--card-surface); border-radius: 20px; padding: 15px; 
+            margin-bottom: 20px; display: none; border: 1px solid rgba(255,255,255,0.1);
+            animation: expandDown 0.5s ease forwards; overflow: hidden;
+        }
+        @keyframes expandDown {
+            from { opacity: 0; max-height: 0; transform: translateY(-10px); }
+            to { opacity: 1; max-height: 2000px; transform: translateY(0); }
+        }
+        .res-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; }
+        .res-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-solid); }
+        .res-user-info h4 { font-size: 14px; font-weight: 700; color: #fff; }
+        .res-user-info p { font-size: 11px; color: var(--text-muted); }
+        .res-caption { font-size: 12px; color: #f3f4f6; margin-bottom: 15px; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; }
+        .video-player { width: 100%; border-radius: 15px; background: #000; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        
+        .info-features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .feat-item { background: var(--card-surface); border-radius: 15px; padding: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.03); }
+        .feat-item i { font-size: 20px; color: #f97316; margin-bottom: 5px; display: block; }
+        .feat-item h5 { font-size: 11px; font-weight: 700; }
+        
+        .footer-credit { text-align: center; margin-top: 30px; font-size: 10px; color: var(--text-muted); opacity: 0.6; }
+        
+        .fab-container { position: absolute; bottom: 20px; right: 20px; z-index: 99; }
+        .btn-fab { width: 45px; height: 45px; border-radius: 12px; background: white; color: black; display: flex; align-items: center; justify-content: center; font-size: 20px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        
+        .ripple { position: relative; overflow: hidden; }
+        .ripple span { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.3); transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
-:root{
-    --bg:#0f0f0f;
-    --card:#1e1e1e;
-    --text:#ffffff;
-    --muted:#9ca3af;
-    --accent:linear-gradient(45deg,#8b5cf6,#f97316,#3b82f6);
-    --purple:#8b5cf6;
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Plus Jakarta Sans',sans-serif;
-    -webkit-tap-highlight-color:transparent;
-}
-
-body{
-    background:#080808;
-    color:var(--text);
-    display:flex;
-    justify-content:center;
-    min-height:100vh;
-}
-
-.app{
-    width:100%;
-    max-width:480px;
-    min-height:100vh;
-    background:var(--bg);
-    overflow:hidden;
-}
-
-.header{
-    padding:20px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-bottom:1px solid rgba(255,255,255,.05);
-}
-
-.logo{
-    font-size:18px;
-    font-weight:800;
-    background:var(--accent);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.content{
-    padding:20px;
-}
-
-.brand{
-    background:var(--card);
-    border-radius:25px;
-    padding:20px;
-    margin-bottom:20px;
-}
-
-.profile{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.profile img{
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    border:2px solid var(--purple);
-    object-fit:cover;
-}
-
-.profile h2{
-    font-size:17px;
-    margin-bottom:4px;
-}
-
-.profile p{
-    font-size:12px;
-    color:var(--muted);
-}
-
-.marquee{
-    margin-top:15px;
-    overflow:hidden;
-    white-space:nowrap;
-    background:#151515;
-    border-radius:10px;
-    padding:10px 0;
-}
-
-.marquee span{
-    display:inline-block;
-    padding-left:100%;
-    animation:marquee 15s linear infinite;
-    font-size:11px;
-    color:var(--muted);
-}
-
-@keyframes marquee{
-    0%{transform:translateX(0);}
-    100%{transform:translateX(-100%);}
-}
-
-.sosmed{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-bottom:20px;
-}
-
-.sos-btn{
-    background:var(--card);
-    border-radius:18px;
-    padding:14px 5px;
-    text-align:center;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.sos-btn.active{
-    background:var(--accent);
-}
-
-.sos-btn i{
-    font-size:25px;
-}
-
-.sos-btn span{
-    display:block;
-    margin-top:5px;
-    font-size:10px;
-    font-weight:700;
-}
-
-.tabs{
-    display:flex;
-    gap:10px;
-    background:var(--card);
-    padding:5px;
-    border-radius:16px;
-    margin-bottom:20px;
-}
-
-.tab{
-    flex:1;
-    padding:12px;
-    border-radius:12px;
-    text-align:center;
-    font-size:12px;
-    font-weight:700;
-    color:var(--muted);
-    cursor:pointer;
-}
-
-.tab.active{
-    background:#111;
-    color:white;
-}
-
-.card{
-    background:var(--card);
-    border-radius:25px;
-    padding:20px;
-}
-
-.title{
-    font-size:13px;
-    font-weight:800;
-    margin-bottom:20px;
-}
-
-.input-group{
-    margin-bottom:15px;
-}
-
-.input-group label{
-    display:block;
-    margin-bottom:8px;
-    font-size:11px;
-    font-weight:700;
-    color:var(--muted);
-}
-
-.input-group input,
-.input-group select{
-    width:100%;
-    padding:15px;
-    border:none;
-    outline:none;
-    background:#151515;
-    border-radius:14px;
-    color:white;
-}
-
-.btn{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:14px;
-    background:var(--accent);
-    color:white;
-    font-weight:800;
-    cursor:pointer;
-    font-size:14px;
-}
-
-.result{
-    display:none;
-    margin-top:20px;
-    background:#151515;
-    border-radius:20px;
-    padding:15px;
-}
-
-.result img{
-    width:100%;
-    border-radius:15px;
-    margin-bottom:15px;
-}
-
-.result h3{
-    font-size:14px;
-    margin-bottom:15px;
-}
-
-.result a{
-    display:block;
-    text-decoration:none;
-    text-align:center;
-}
-
-.footer{
-    text-align:center;
-    margin-top:25px;
-    color:var(--muted);
-    font-size:11px;
-}
-
-.toast{
-    position:fixed;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%);
-    padding:12px 20px;
-    border-radius:12px;
-    color:white;
-    font-size:12px;
-    font-weight:700;
-    z-index:9999;
-}
-
-</style>
+        .toast-msg { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 12px; font-size: 12px; font-weight: 700; z-index: 9999; }
+    </style>
 </head>
-
 <body>
+<div class="app-frame">
+    <div class="header-area">
+        <div class="btn-icon ripple" id="btnMenu"><i class="ri-menu-2-fill"></i></div>
+        <div class="logo-text">MAMZ DOWNLOADER</div>
+        <div class="btn-icon ripple" id="btnRefresh"><i class="ri-refresh-line"></i></div>
+    </div>
+    
+    <div class="content-area" id="mainContent">
+        <div class="brand-box">
+            <div class="profile-section">
+                <img src="https://files.catbox.moe/gsy8am.jpg" class="p-img">
+                <div class="p-info">
+                    <h2 id="brandTitle">YouTube Downloader</h2>
+                    <p><span class="status-dot"></span> Mamz • Tools Online</p>
+                </div>
+            </div>
+            <div class="marquee-container">
+                <div class="marquee-text">🚀 High Speed Download • MP4 Up to 1080p • MP3 320kbps • Support YouTube, TikTok, Instagram, Facebook • Secure & No Ads</div>
+            </div>
+        </div>
 
-<div class="app">
+        <div class="sosmed-selector" id="sosmedBar">
+            <div class="sos-btn active ripple" data-sosmed="youtube"><i class="ri-youtube-fill" style="color:#ff0000;"></i><span>YouTube</span></div>
+            <div class="sos-btn ripple" data-sosmed="facebook"><i class="ri-facebook-circle-fill" style="color:#1877f2;"></i><span>Facebook</span></div>
+            <div class="sos-btn ripple" data-sosmed="instagram"><i class="ri-instagram-line" style="color:#e4405f;"></i><span>Instagram</span></div>
+            <div class="sos-btn ripple" data-sosmed="tiktok"><i class="ri-tiktok-fill" style="color:#fff;"></i><span>TikTok</span></div>
+        </div>
 
-<div class="header">
-<div class="logo">
-DOKS DOWNLOADER
-</div>
-</div>
+        <div class="tab-bar">
+            <div class="tab active" data-tab="mp4">VIDEO MP4</div>
+            <div class="tab" data-tab="mp3">AUDIO MP3</div>
+        </div>
 
-<div class="content">
+        <div id="downloaderUI">
+            <div id="mp4Tab" class="tab-content">
+                <div class="form-card">
+                    <div class="menu-title" id="formTitle"><i class="ri-download-cloud-fill"></i> DOWNLOAD VIDEO</div>
+                    <div class="input-group">
+                        <label>Link Video</label>
+                        <input type="text" id="mp4Url" placeholder="Tempel link video di sini...">
+                    </div>
+                    <div class="input-group">
+                        <label>Pilih Resolusi</label>
+                        <select id="resolusiSelect">
+                            <option value="1080">1080p (Full HD)</option>
+                            <option value="720" selected>720p (HD)</option>
+                            <option value="480">480p (SD)</option>
+                            <option value="360">360p</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary ripple" id="mp4Btn"><i class="ri-flashlight-fill"></i> MULAI DOWNLOAD</button>
+                </div>
+                <div id="mp4Result" class="result-card"></div>
+            </div>
 
-<div class="brand">
+            <div id="mp3Tab" class="tab-content" style="display:none;">
+                <div class="form-card">
+                    <div class="menu-title"><i class="ri-music-2-fill"></i> DOWNLOAD AUDIO</div>
+                    <div class="input-group">
+                        <label>Link Audio/Video</label>
+                        <input type="text" id="mp3Url" placeholder="Tempel link di sini...">
+                    </div>
+                    <div class="input-group">
+                        <label>Pilih Kualitas MP3</label>
+                        <select id="mp3Quality">
+                            <option value="320">320kbps (High)</option>
+                            <option value="192" selected>192kbps (Medium)</option>
+                            <option value="128">128kbps (Standard)</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary ripple" id="mp3Btn"><i class="ri-music-line"></i> DOWNLOAD MP3</button>
+                </div>
+                <div id="mp3Result" class="result-card"></div>
+            </div>
+        </div>
 
-<div class="profile">
-
-<img src="https://files.catbox.moe/gsy8am.jpg">
-
-<div>
-<h2 id="brandTitle">YOUTUBE DOWNLOADER</h2>
-<p>Doks Multi Downloader</p>
-</div>
-
-</div>
-
-<div class="marquee">
-<span>
-🚀 Fast Download • YouTube • TikTok • MP4 • MP3 • No Ads
-</span>
-</div>
-
-</div>
-
-<div class="sosmed">
-
-<div class="sos-btn active"
-data-sosmed="youtube">
-
-<i class="ri-youtube-fill"
-style="color:red;"></i>
-
-<span>YouTube</span>
-
-</div>
-
-<div class="sos-btn"
-data-sosmed="tiktok">
-
-<i class="ri-tiktok-fill"></i>
-
-<span>TikTok</span>
-
-</div>
-
-<div class="sos-btn"
-data-sosmed="instagram">
-
-<i class="ri-instagram-line"
-style="color:#e4405f;"></i>
-
-<span>Instagram</span>
-
-</div>
-
-<div class="sos-btn"
-data-sosmed="facebook">
-
-<i class="ri-facebook-circle-fill"
-style="color:#1877f2;"></i>
-
-<span>Facebook</span>
-
-</div>
-
-</div>
-
-<div class="tabs">
-
-<div class="tab active"
-data-tab="mp4">
-
-VIDEO MP4
-
-</div>
-
-<div class="tab"
-data-tab="mp3">
-
-AUDIO MP3
-
-</div>
-
+        <div class="info-features">
+            <div class="feat-item"><i class="ri-shield-flash-line"></i><h5>Secure Server</h5></div>
+            <div class="feat-item"><i class="ri-rocket-2-line"></i><h5>Ultra Fast</h5></div>
+        </div>
+        
+        <div class="footer-credit">
+            <p>Created with <i class="ri-heart-fill" style="color:#ef4444;"></i> by Mamz • &copy; 2026</p>
+        </div>
+    </div>
+    
+    <div class="fab-container">
+        <button class="btn-fab ripple" id="fabScrollTop"><i class="ri-arrow-up-s-line"></i></button>
+    </div>
 </div>
 
-<div id="mp4Page">
-
-<div class="card">
-
-<div class="title">
-DOWNLOAD VIDEO
+<div id="pageCaraPakai" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--bg-main); z-index:2000; padding:25px;">
+    <div style="display:flex; align-items:center; gap:15px; margin-bottom:30px;">
+        <div class="btn-icon ripple" onclick="document.getElementById('pageCaraPakai').style.display='none'"><i class="ri-arrow-left-line"></i></div>
+        <h2 style="font-size:18px;">Cara Penggunaan</h2>
+    </div>
+    <div style="line-height:1.8; font-size:14px; color:var(--text-muted);">
+        <p>1. Pilih sosmed yang ingin kamu download.</p>
+        <p>2. Salin link video dari TikTok, IG, FB, atau YouTube.</p>
+        <p>3. Tempel link pada kolom yang tersedia.</p>
+        <p>4. Pilih resolusi/kualitas yang kamu mau.</p>
+        <p>5. Klik tombol Mulai Download.</p>
+    </div>
 </div>
 
-<div class="input-group">
-
-<label>Link Video</label>
-
-<input type="text"
-id="mp4Url"
-placeholder="Tempel link video...">
-
-</div>
-
-<div class="input-group">
-
-<label>Resolusi</label>
-
-<select id="mp4Quality">
-<option value="1080">1080p</option>
-<option value="720" selected>720p</option>
-<option value="480">480p</option>
-<option value="360">360p</option>
-</select>
-
-</div>
-
-<button class="btn"
-id="mp4Btn">
-
-DOWNLOAD VIDEO
-
-</button>
-
-<div class="result"
-id="mp4Result"></div>
-
-</div>
-
-</div>
-
-<div id="mp3Page"
-style="display:none;">
-
-<div class="card">
-
-<div class="title">
-DOWNLOAD AUDIO
-</div>
-
-<div class="input-group">
-
-<label>Link Video</label>
-
-<input type="text"
-id="mp3Url"
-placeholder="Tempel link...">
-
-</div>
-
-<div class="input-group">
-
-<label>Kualitas</label>
-
-<select id="mp3Quality">
-<option value="320">320kbps</option>
-<option value="192" selected>192kbps</option>
-<option value="128">128kbps</option>
-</select>
-
-</div>
-
-<button class="btn"
-id="mp3Btn">
-
-DOWNLOAD MP3
-
-</button>
-
-<div class="result"
-id="mp3Result"></div>
-
-</div>
-
-</div>
-
-<div class="footer">
-Created with ❤️ by Doks © 2026
-</div>
-
-</div>
-
+<div class="sidebar-overlay" id="sidebarOverlay">
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div style="padding:10px; color:#9ca3af; font-size:12px; margin-top:20px;">Menu Utama</div>
+        <div style="padding:15px; border-bottom:1px solid #333; font-size:13px; cursor:pointer;" onclick="location.reload()"><i class="ri-home-4-line"></i> Beranda</div>
+        <div style="padding:15px; border-bottom:1px solid #333; font-size:13px; cursor:pointer;" id="btnCara"><i class="ri-information-line"></i> Cara Pakai</div>
+    </div>
 </div>
 
 <script>
+    let currentSosmed = 'youtube';
 
-let currentSosmed = 'youtube';
-
-function toast(msg,error=false){
-
-    const t = document.createElement('div');
-
-    t.className = 'toast';
-
-    t.style.background =
-    error ? '#ef4444' : '#10b981';
-
-    t.innerText = msg;
-
-    document.body.appendChild(t);
-
-    setTimeout(()=>{
-        t.remove();
-    },2500);
-}
-
-document.querySelectorAll('.sos-btn')
-.forEach(btn=>{
-
-    btn.onclick = ()=>{
-
-        document.querySelectorAll('.sos-btn')
-        .forEach(b=>b.classList.remove('active'));
-
-        btn.classList.add('active');
-
-        currentSosmed =
-        btn.dataset.sosmed;
-
-        document.getElementById('brandTitle')
-        .innerText =
-        currentSosmed.toUpperCase()
-        + ' DOWNLOADER';
-    };
-});
-
-document.querySelectorAll('.tab')
-.forEach(tab=>{
-
-    tab.onclick = ()=>{
-
-        document.querySelectorAll('.tab')
-        .forEach(t=>t.classList.remove('active'));
-
-        tab.classList.add('active');
-
-        const target =
-        tab.dataset.tab;
-
-        document.getElementById('mp4Page')
-        .style.display =
-        target === 'mp4'
-        ? 'block'
-        : 'none';
-
-        document.getElementById('mp3Page')
-        .style.display =
-        target === 'mp3'
-        ? 'block'
-        : 'none';
-    };
-});
-
-async function performDownload(type){
-
-    const input =
-    type === 'mp4'
-    ? document.getElementById('mp4Url')
-    : document.getElementById('mp3Url');
-
-    const resultDiv =
-    type === 'mp4'
-    ? document.getElementById('mp4Result')
-    : document.getElementById('mp3Result');
-
-    const url =
-    input.value.trim();
-
-    if(!url){
-
-        toast("Masukkan URL!",true);
-
-        return;
+    function showToast(msg, isError = false) {
+        const t = document.createElement('div');
+        t.className = 'toast-msg';
+        t.style.background = isError ? '#ef4444' : '#10b981';
+        t.innerText = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2500);
     }
 
-    resultDiv.style.display = 'block';
-
-    resultDiv.innerHTML = `
-    <div style="text-align:center;padding:20px;">
-
-    <i class="ri-loader-4-line ri-spin"
-    style="font-size:30px;color:#8b5cf6;"></i>
-
-    <p style="margin-top:10px;">
-    Memproses...
-    </p>
-
-    </div>
-    `;
-
-    try{
-
-        let apiUrl = '';
-
-        // YOUTUBE
-        if(currentSosmed === 'youtube'){
-
-            apiUrl =
-            `https://api.agatz.xyz/api/${type === 'mp3' ? 'ytmp3' : 'ytmp4'}?url=${encodeURIComponent(url)}`;
+    // Logika Ekstraksi ID YouTube
+    function extractVideoId(url) {
+        const patterns = [
+            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&?#]+)/,
+            /youtube\.com\/shorts\/([^&?#]+)/
+        ];
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match) return match[1];
         }
-
-        // TIKTOK
-        else if(currentSosmed === 'tiktok'){
-
-            apiUrl =
-            `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
-        }
-
-        // INSTAGRAM
-        else if(currentSosmed === 'instagram'){
-
-            apiUrl =
-            `https://api.agatz.xyz/api/igdl?url=${encodeURIComponent(url)}`;
-        }
-
-        // FACEBOOK
-        else if(currentSosmed === 'facebook'){
-
-            apiUrl =
-            `https://api.agatz.xyz/api/fbdl?url=${encodeURIComponent(url)}`;
-        }
-
-        const response =
-        await fetch(apiUrl);
-
-        const data =
-        await response.json();
-
-        console.log(data);
-
-        const result =
-        data.data ||
-        data.result ||
-        data;
-
-        let downloadUrl = '';
-
-        // TIKTOK
-        if(currentSosmed === 'tiktok'){
-
-            downloadUrl =
-            result.play ||
-            result.wmplay ||
-            result.music;
-
-        }else{
-
-            downloadUrl =
-            result.download ||
-            result.url ||
-            result.video ||
-            result.audio ||
-            result.mp4 ||
-            result.mp3;
-        }
-
-        if(!downloadUrl){
-
-            throw new Error();
-        }
-
-        const thumb =
-        result.cover ||
-        result.thumbnail ||
-        result.thumb ||
-        'https://files.catbox.moe/gsy8am.jpg';
-
-        const title =
-        result.title ||
-        result.fullTitle ||
-        'Downloader Result';
-
-        resultDiv.innerHTML = `
-
-        <img src="${thumb}">
-
-        <h3>${title}</h3>
-
-        <a href="${downloadUrl}"
-        target="_blank"
-        class="btn">
-
-        DOWNLOAD SEKARANG
-
-        </a>
-        `;
-
-        toast("Berhasil!");
-
-    }catch(err){
-
-        console.log(err);
-
-        resultDiv.innerHTML = `
-        <div style="text-align:center;padding:20px;">
-
-        <i class="ri-error-warning-fill"
-        style="font-size:35px;color:red;"></i>
-
-        <p style="margin-top:10px;">
-        Gagal mengambil data.
-        </p>
-
-        </div>
-        `;
-
-        toast("Terjadi kesalahan!",true);
+        return null;
     }
-}
 
-document.getElementById('mp4Btn')
-.onclick = ()=>{
+    function clearPreviousData() {
+        document.getElementById('mp4Url').value = '';
+        document.getElementById('mp3Url').value = '';
+        document.getElementById('mp4Result').style.display = 'none';
+        document.getElementById('mp4Result').innerHTML = '';
+        document.getElementById('mp3Result').style.display = 'none';
+        document.getElementById('mp3Result').innerHTML = '';
+    }
 
-    performDownload('mp4');
-};
+    document.querySelectorAll('.sos-btn').forEach(btn => {
+        btn.onclick = () => {
+            clearPreviousData();
+            document.querySelectorAll('.sos-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSosmed = btn.dataset.sosmed;
+            document.getElementById('brandTitle').innerText = currentSosmed.toUpperCase() + ' Downloader';
+            document.getElementById('formTitle').innerHTML = `<i class="ri-download-cloud-fill"></i> DOWNLOAD ${currentSosmed.toUpperCase()}`;
+        };
+    });
 
-document.getElementById('mp3Btn')
-.onclick = ()=>{
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.onclick = () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const target = tab.dataset.tab;
+            document.getElementById('mp4Tab').style.display = target === 'mp4' ? 'block' : 'none';
+            document.getElementById('mp3Tab').style.display = target === 'mp3' ? 'block' : 'none';
+        };
+    });
 
-    performDownload('mp3');
-};
+    async function performDownload(type) {
+        const urlInput = type === 'mp4' ? document.getElementById('mp4Url') : document.getElementById('mp3Url');
+        const resDiv = type === 'mp4' ? document.getElementById('mp4Result') : document.getElementById('mp3Result');
+        const quality = type === 'mp4' ? document.getElementById('resolusiSelect').value : document.getElementById('mp3Quality').value;
+        const url = urlInput.value.trim();
 
-</script>
+        if(!url) return showToast("Masukkan URL dulu!", true);
 
-</body>
-</html>
+        resDiv.style.display = 'block';
+        resDiv.innerHTML = `<div style="text-align:center; padding:20px; font-size:12px;">
+            <i class="ri-loader-4-line ri-spin" style="font-size:24px; color:var(--accent-solid);"></i><br>
+            Processing ${currentSosmed.toUpperCase()} Content...</div>`;
+
+        try {
+            let apiUrl;
+            if(currentSosmed === 'youtube') {
+                // Logika khusus YouTube MP3 vs MP4
+                if(type === 'mp3') {
+                    apiUrl = `https://api.nexray.eu.cc/downloader/v1/ytmp3?url=${encodeURIComponent(url)}`;
+                } else {
+                    apiUrl = `https://api.nexray.eu.cc/downloader/ytmp4?url=${encodeURIComponent(url)}&resolusi=${quality}`;
+                }
+            } else if(currentSosmed === 'instagram' || currentSosmed === 'facebook') {
+                apiUrl = `https://api.vreden.web.id/api/down?url=${encodeURIComponent(url)}`;
+            } else {
+                apiUrl = `https://api.nexray.eu.cc/downloader/tiktok?url=${encodeURIComponent(url)}&quality=${quality}`;
+            }
+
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            const result = data.result || data.data;
+            if(result) {
+                const downloadUrl = result.url || result.video || result.audio || result.mp4 || result.mp3;
+                const thumb = result.thumbnail || result.thumb || (currentSosmed === 'youtube' ? `https://img.youtube.com/vi/${extractVideoId(url)}/hqdefault.jpg` : 'https://files.catbox.moe/gsy8am.jpg');
+                
+                resDiv.inn
