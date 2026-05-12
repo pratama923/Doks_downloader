@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Multi Downloader - Mamz</title>
+    <title>Multi Downloader - Killua</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
@@ -113,8 +113,8 @@
             display: flex; flex-direction: column; align-items: center; gap: 6px;
             border: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;
         }
-        .sos-btn i { font-size: 22px; }
-        .sos-btn span { font-size: 9px; font-weight: 700; color: var(--text-muted); }
+        .sos-btn i { font-size: 22px; pointer-events: none; }
+        .sos-btn span { font-size: 9px; font-weight: 700; color: var(--text-muted); pointer-events: none; }
         .sos-btn.active { background: var(--accent); border: none; }
         .sos-btn.active span { color: white; }
 
@@ -151,7 +151,7 @@
         }
         .res-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; }
         .res-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-solid); }
-        .res-user-info h4 { font-size: 14px; font-weight: 700; color: #fff; }
+        .res-user-info h4 { font-size: 14px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
         .res-user-info p { font-size: 11px; color: var(--text-muted); }
         .res-caption { font-size: 12px; color: #f3f4f6; margin-bottom: 15px; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; }
         .video-player { width: 100%; border-radius: 15px; background: #000; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
@@ -177,17 +177,17 @@
 <div class="app-frame">
     <div class="header-area">
         <div class="btn-icon ripple" id="btnMenu"><i class="ri-menu-2-fill"></i></div>
-        <div class="logo-text">MAMZ DOWNLOADER</div>
+        <div class="logo-text">KILLUA DOWNLOADER</div>
         <div class="btn-icon ripple" id="btnRefresh"><i class="ri-refresh-line"></i></div>
     </div>
     
     <div class="content-area" id="mainContent">
         <div class="brand-box">
             <div class="profile-section">
-                <img src="https://files.catbox.moe/gsy8am.jpg" class="p-img">
+                <img src="https://lesser-sapphire-kwlwrsmon2.edgeone.app/IMG-20260501-WA0218.jpg" class="p-img">
                 <div class="p-info">
                     <h2 id="brandTitle">YouTube Downloader</h2>
-                    <p><span class="status-dot"></span> Mamz • Tools Online</p>
+                    <p><span class="status-dot"></span> Killua • Tools Online</p>
                 </div>
             </div>
             <div class="marquee-container">
@@ -210,7 +210,7 @@
         <div id="downloaderUI">
             <div id="mp4Tab" class="tab-content">
                 <div class="form-card">
-                    <div class="menu-title" id="formTitle"><i class="ri-download-cloud-fill"></i> DOWNLOAD VIDEO</div>
+                    <div class="menu-title" id="formTitle"><i class="ri-download-cloud-fill"></i> DOWNLOAD YOUTUBE</div>
                     <div class="input-group">
                         <label>Link Video</label>
                         <input type="text" id="mp4Url" placeholder="Tempel link video di sini...">
@@ -256,7 +256,7 @@
         </div>
         
         <div class="footer-credit">
-            <p>Created with <i class="ri-heart-fill" style="color:#ef4444;"></i> by Mamz • &copy; 2026</p>
+            <p>Created with <i class="ri-heart-fill" style="color:#ef4444;"></i> by Killua • &copy; 2026</p>
         </div>
     </div>
     
@@ -271,11 +271,11 @@
         <h2 style="font-size:18px;">Cara Penggunaan</h2>
     </div>
     <div style="line-height:1.8; font-size:14px; color:var(--text-muted);">
-        <p>1. Pilih sosmed yang ingin kamu download.</p>
-        <p>2. Salin link video dari TikTok, IG, FB, atau YouTube.</p>
-        <p>3. Tempel link pada kolom yang tersedia.</p>
-        <p>4. Pilih resolusi/kualitas yang kamu mau.</p>
-        <p>5. Klik tombol Mulai Download.</p>
+        <p>1. Pilih sosmed (YouTube, FB, IG, atau TikTok).</p>
+        <p>2. Salin link video dari aplikasi terkait.</p>
+        <p>3. Tempel link pada kolom input.</p>
+        <p>4. Klik tombol "Mulai Download".</p>
+        <p>5. Tunggu hingga tombol "Save to Device" muncul.</p>
     </div>
 </div>
 
@@ -299,37 +299,24 @@
         setTimeout(() => t.remove(), 2500);
     }
 
-    // Logika Ekstraksi ID YouTube
-    function extractVideoId(url) {
-        const patterns = [
-            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&?#]+)/,
-            /youtube\.com\/shorts\/([^&?#]+)/
-        ];
-        for (const pattern of patterns) {
-            const match = url.match(pattern);
-            if (match) return match[1];
-        }
-        return null;
-    }
-
     function clearPreviousData() {
         document.getElementById('mp4Url').value = '';
         document.getElementById('mp3Url').value = '';
         document.getElementById('mp4Result').style.display = 'none';
-        document.getElementById('mp4Result').innerHTML = '';
         document.getElementById('mp3Result').style.display = 'none';
-        document.getElementById('mp3Result').innerHTML = '';
     }
 
+    // Fix Selector Sosmed
     document.querySelectorAll('.sos-btn').forEach(btn => {
-        btn.onclick = () => {
+        btn.addEventListener('click', function() {
             clearPreviousData();
             document.querySelectorAll('.sos-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentSosmed = btn.dataset.sosmed;
+            this.classList.add('active');
+            currentSosmed = this.getAttribute('data-sosmed');
+            
             document.getElementById('brandTitle').innerText = currentSosmed.toUpperCase() + ' Downloader';
             document.getElementById('formTitle').innerHTML = `<i class="ri-download-cloud-fill"></i> DOWNLOAD ${currentSosmed.toUpperCase()}`;
-        };
+        });
     });
 
     document.querySelectorAll('.tab').forEach(tab => {
@@ -353,29 +340,85 @@
         resDiv.style.display = 'block';
         resDiv.innerHTML = `<div style="text-align:center; padding:20px; font-size:12px;">
             <i class="ri-loader-4-line ri-spin" style="font-size:24px; color:var(--accent-solid);"></i><br>
-            Processing ${currentSosmed.toUpperCase()} Content...</div>`;
+            Fetching from ${currentSosmed.toUpperCase()}...</div>`;
 
         try {
-            let apiUrl;
-            if(currentSosmed === 'youtube') {
-                // Logika khusus YouTube MP3 vs MP4
-                if(type === 'mp3') {
-                    apiUrl = `https://api.nexray.eu.cc/downloader/v1/ytmp3?url=${encodeURIComponent(url)}`;
-                } else {
-                    apiUrl = `https://api.nexray.eu.cc/downloader/ytmp4?url=${encodeURIComponent(url)}&resolusi=${quality}`;
-                }
-            } else if(currentSosmed === 'instagram' || currentSosmed === 'facebook') {
-                apiUrl = `https://api.vreden.web.id/api/down?url=${encodeURIComponent(url)}`;
-            } else {
-                apiUrl = `https://api.nexray.eu.cc/downloader/tiktok?url=${encodeURIComponent(url)}&quality=${quality}`;
+            let apiUrl = `https://api.vreden.web.id/api/down?url=${encodeURIComponent(url)}`;
+            
+            // Khusus YouTube menggunakan Nexray sebagai backup jika Vreden gagal
+            if(currentSosmed === 'youtube' && type === 'mp3') {
+                apiUrl = `https://api.nexray.eu.cc/downloader/v1/ytmp3?url=${encodeURIComponent(url)}`;
             }
 
             const response = await fetch(apiUrl);
             const data = await response.json();
-
             const result = data.result || data.data;
+
             if(result) {
                 const downloadUrl = result.url || result.video || result.audio || result.mp4 || result.mp3;
-                const thumb = result.thumbnail || result.thumb || (currentSosmed === 'youtube' ? `https://img.youtube.com/vi/${extractVideoId(url)}/hqdefault.jpg` : 'https://files.catbox.moe/gsy8am.jpg');
+                const thumb = result.thumbnail || result.thumb || 'https://lesser-sapphire-kwlwrsmon2.edgeone.app/IMG-20260501-WA0218.jpg';
                 
-                resDiv.inn
+                resDiv.innerHTML = `
+                    <div class="menu-title"><i class="ri-checkbox-circle-fill" style="color:#10b981;"></i> FILE DITEMUKAN</div>
+                    <div class="res-header">
+                        <img src="${thumb}" class="res-avatar" onerror="this.src='https://lesser-sapphire-kwlwrsmon2.edgeone.app/IMG-20260501-WA0218.jpg'">
+                        <div class="res-user-info">
+                            <h4>${result.title || result.author || 'Video Content'}</h4>
+                            <p>Format: ${type.toUpperCase()} • ${currentSosmed}</p>
+                        </div>
+                    </div>
+                    <div class="res-caption">${result.caption || result.title || 'Klik simpan untuk mendownload ke galeri.'}</div>
+                    
+                    ${type === 'mp4' ? `<video class="video-player" controls src="${downloadUrl}"></video>` : `<audio controls style="width:100%; margin-bottom:15px;" src="${downloadUrl}"></audio>`}
+                    <a href="${downloadUrl}" download target="_blank" class="btn-primary" style="text-decoration:none; background:#10b981;">
+                        <i class="ri-download-2-line"></i> SAVE TO DEVICE
+                    </a>
+                `;
+            } else {
+                throw new Error();
+            }
+        } catch (e) {
+            resDiv.innerHTML = `<div style="color:#ef4444; font-size:11px; text-align:center; padding:10px;">Gagal! Link tidak valid atau server down.</div>`;
+        }
+    }
+
+    document.getElementById('mp4Btn').onclick = () => performDownload('mp4');
+    document.getElementById('mp3Btn').onclick = () => performDownload('mp3');
+
+    document.getElementById('btnMenu').onclick = () => { 
+        document.getElementById('sidebarOverlay').style.display = 'flex'; 
+        setTimeout(() => document.getElementById('sidebarMenu').classList.add('open'), 10); 
+    };
+    
+    document.getElementById('sidebarOverlay').onclick = (e) => { 
+        if(e.target === document.getElementById('sidebarOverlay')) {
+            document.getElementById('sidebarMenu').classList.remove('open'); 
+            setTimeout(() => document.getElementById('sidebarOverlay').style.display = 'none', 300); 
+        } 
+    };
+
+    document.getElementById('btnCara').onclick = () => {
+        document.getElementById('sidebarMenu').classList.remove('open');
+        document.getElementById('sidebarOverlay').style.display = 'none';
+        document.getElementById('pageCaraPakai').style.display = 'block';
+    };
+
+    document.getElementById('btnRefresh').onclick = () => location.reload();
+    document.getElementById('fabScrollTop').onclick = () => document.getElementById('mainContent').scrollTo({top:0, behavior:'smooth'});
+
+    document.addEventListener('click', e => {
+        const b = e.target.closest('.ripple');
+        if(b) {
+            const s = document.createElement('span');
+            const d = Math.max(b.clientWidth, b.clientHeight);
+            const r = b.getBoundingClientRect();
+            s.style.width = s.style.height = d + 'px';
+            s.style.left = e.clientX - r.left - d/2 + 'px';
+            s.style.top = e.clientY - r.top - d/2 + 'px';
+            b.appendChild(s);
+            setTimeout(() => s.remove(), 600);
+        }
+    });
+</script>
+</body>
+</html>
