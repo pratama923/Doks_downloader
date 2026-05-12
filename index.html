@@ -388,7 +388,13 @@
                         </div>
                     </div>
                     <div class="res-caption">${result.caption || 'File berhasil diproses, silakan klik tombol di bawah.'}</div>
-                    ${type === 'mp4' ? `<video class="video-player" controls src="${downloadUrl}"></video>` : `<audio controls style="width:100%; margin-bottom:15px;" src="${downloadUrl}"></audio>`}
+                    ${currentSosmed !== 'tiktok' && type === 'mp4'
+ ? `<video class="video-player" controls src="${downloadUrl}"></video>`
+ : ''}
+
+${type === 'mp3'
+ ? `<audio controls style="width:100%; margin-bottom:15px;" src="${downloadUrl}"></audio>`
+ : ''}
                     <a href="${downloadUrl}" download target="_blank" class="btn-primary" style="text-decoration:none; background:#10b981;">
                         <i class="ri-download-2-line"></i> SAVE TO DEVICE
                     </a>
