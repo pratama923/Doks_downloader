@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Multi Downloader - KILLUA</title>
+    <title>Multi Downloader - Mamz</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
@@ -177,17 +177,17 @@
 <div class="app-frame">
     <div class="header-area">
         <div class="btn-icon ripple" id="btnMenu"><i class="ri-menu-2-fill"></i></div>
-        <div class="logo-text">KILLUA DOWNLOADER</div>
+        <div class="logo-text">MAMZ DOWNLOADER</div>
         <div class="btn-icon ripple" id="btnRefresh"><i class="ri-refresh-line"></i></div>
     </div>
     
     <div class="content-area" id="mainContent">
         <div class="brand-box">
             <div class="profile-section">
-                <img src="https://lesser-sapphire-kwlwrsmon2.edgeone.app/IMG-20260501-WA0218.jpg" class="p-img">
+                <img src="https://files.catbox.moe/gsy8am.jpg" class="p-img">
                 <div class="p-info">
                     <h2 id="brandTitle">YouTube Downloader</h2>
-                    <p><span class="status-dot"></span> KILLUA • Tools Online</p>
+                    <p><span class="status-dot"></span> Mamz • Tools Online</p>
                 </div>
             </div>
             <div class="marquee-container">
@@ -256,7 +256,7 @@
         </div>
         
         <div class="footer-credit">
-            <p>Created with <i class="ri-heart-fill" style="color:#ef4444;"></i> by KILLUA • &copy; 2026</p>
+            <p>Created with <i class="ri-heart-fill" style="color:#ef4444;"></i> by Mamz • &copy; 2026</p>
         </div>
     </div>
     
@@ -299,6 +299,7 @@
         setTimeout(() => t.remove(), 2500);
     }
 
+    // Logika Ekstraksi ID YouTube
     function extractVideoId(url) {
         const patterns = [
             /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&?#]+)/,
@@ -357,6 +358,7 @@
         try {
             let apiUrl;
             if(currentSosmed === 'youtube') {
+                // Logika khusus YouTube MP3 vs MP4
                 if(type === 'mp3') {
                     apiUrl = `https://api.nexray.eu.cc/downloader/v1/ytmp3?url=${encodeURIComponent(url)}`;
                 } else {
@@ -364,35 +366,28 @@
                 }
             } else if(currentSosmed === 'instagram' || currentSosmed === 'facebook') {
                 apiUrl = `https://api.vreden.web.id/api/down?url=${encodeURIComponent(url)}`;
-            } else if(currentSosmed === 'tiktok') {
-                // Perbaikan: Gunakan endpoint v1 yang lebih stabil untuk TikTok
-                apiUrl = `https://api.nexray.eu.cc/downloader/v1/tiktok?url=${encodeURIComponent(url)}`;
+            } else {
+                apiUrl = `https://api.nexray.eu.cc/downloader/tiktok?url=${encodeURIComponent(url)}&quality=${quality}`;
             }
 
             const response = await fetch(apiUrl);
             const data = await response.json();
+
             const result = data.result || data.data;
-
             if(result) {
-                // Perbaikan: Logika penentuan URL download yang lebih fleksibel untuk TikTok
-                const downloadUrl = type === 'mp4' 
-                    ? (result.video || result.url || result.mp4 || (result.urls && result.urls[0]))
-                    : (result.audio || result.mp3 || resul                    : (result.audio || result.mp3 || result.music || (result.urls && result.urls[1]));
+                const downloadUrl = result.url || result.video || result.audio || result.mp4 || result.mp3;
+                const thumb = result.thumbnail || result.thumb || (currentSosmed === 'youtube' ? `https://img.youtube.com/vi/${extractVideoId(url)}/hqdefault.jpg` : 'https://files.catbox.moe/gsy8am.jpg');
                 
-                const thumb = result.thumbnail || result.thumb || result.cover || (currentSosmed === 'youtube' ? `https://img.youtube.com/vi/${extractVideoId(url)}/hqdefault.jpg` : 'https://files.catbox.moe/gsy8am.jpg');
-                
-                if(!downloadUrl) throw new Error("Link tidak ditemukan");
-
                 resDiv.innerHTML = `
                     <div class="menu-title"><i class="ri-checkbox-circle-fill" style="color:#10b981;"></i> READY TO DOWNLOAD</div>
                     <div class="res-header">
                         <img src="${thumb}" class="res-avatar" onerror="this.src='https://files.catbox.moe/gsy8am.jpg'">
                         <div class="res-user-info">
-                            <h4>${result.title || result.author || result.desc || 'Social Media Content'}</h4>
+                            <h4>${result.title || result.author || 'Content Download'}</h4>
                             <p>Format: ${type.toUpperCase()} • ${currentSosmed}</p>
                         </div>
                     </div>
-                    <div class="res-caption">${result.caption || result.desc || 'File berhasil diproses, silakan klik tombol di bawah.'}</div>
+                    <div class="res-caption">${result.caption || 'File berhasil diproses, silakan klik tombol di bawah.'}</div>
                     ${type === 'mp4' ? `<video class="video-player" controls src="${downloadUrl}"></video>` : `<audio controls style="width:100%; margin-bottom:15px;" src="${downloadUrl}"></audio>`}
                     <a href="${downloadUrl}" download target="_blank" class="btn-primary" style="text-decoration:none; background:#10b981;">
                         <i class="ri-download-2-line"></i> SAVE TO DEVICE
@@ -402,7 +397,7 @@
                 throw new Error("Failed");
             }
         } catch (e) {
-            resDiv.innerHTML = `<div style="color:#ef4444; font-size:11px; text-align:center; padding:10px;">Gagal! Server sibuk atau link tidak valid. Coba lagi nanti.</div>`;
+            resDiv.innerHTML = `<div style="color:#ef4444; font-size:11px; text-align:center; padding:10px;">Gagal! Server sibuk atau link tidak didukung. Coba link lainnya.</div>`;
         }
     }
 
