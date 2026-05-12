@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+content="width=device-width, initial-scale=1.0">
 
-<title>Multi Downloader - Doks</title>
+<title>DOKS DOWNLOADER</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -14,13 +14,12 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 <style>
 
 :root{
-    --bg-main:#0f0f0f;
-    --bg-deep:#080808;
+    --bg:#0f0f0f;
     --card:#1e1e1e;
-    --text:#f3f4f6;
+    --text:#ffffff;
     --muted:#9ca3af;
     --accent:linear-gradient(45deg,#8b5cf6,#f97316,#3b82f6);
-    --accent-solid:#8b5cf6;
+    --purple:#8b5cf6;
 }
 
 *{
@@ -32,87 +31,65 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 }
 
 body{
-    background:var(--bg-deep);
+    background:#080808;
     color:var(--text);
-    min-height:100vh;
     display:flex;
     justify-content:center;
-    overflow:hidden;
+    min-height:100vh;
 }
 
 .app{
     width:100%;
     max-width:480px;
-    height:100vh;
-    background:var(--bg-main);
+    min-height:100vh;
+    background:var(--bg);
     overflow:hidden;
-    position:relative;
-    display:flex;
-    flex-direction:column;
 }
 
 .header{
-    padding:18px 20px;
+    padding:20px;
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    justify-content:center;
     border-bottom:1px solid rgba(255,255,255,.05);
 }
 
 .logo{
+    font-size:18px;
     font-weight:800;
-    font-size:16px;
     background:var(--accent);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
-.btn-icon{
-    width:42px;
-    height:42px;
-    border-radius:12px;
-    border:none;
-    background:#1b1b1b;
-    color:white;
-    font-size:20px;
-    cursor:pointer;
-    position:relative;
-    z-index:2;
-}
-
 .content{
-    flex:1;
-    overflow-y:auto;
     padding:20px;
-}
-
-.content::-webkit-scrollbar{
-    display:none;
 }
 
 .brand{
     background:var(--card);
-    padding:18px;
-    border-radius:22px;
+    border-radius:25px;
+    padding:20px;
     margin-bottom:20px;
 }
 
 .profile{
     display:flex;
-    gap:14px;
     align-items:center;
+    gap:15px;
 }
 
 .profile img{
-    width:55px;
-    height:55px;
+    width:60px;
+    height:60px;
     border-radius:50%;
-    border:2px solid #8b5cf6;
+    border:2px solid var(--purple);
     object-fit:cover;
 }
 
 .profile h2{
     font-size:17px;
+    margin-bottom:4px;
 }
 
 .profile p{
@@ -151,14 +128,11 @@ body{
 
 .sos-btn{
     background:var(--card);
+    border-radius:18px;
     padding:14px 5px;
-    border-radius:16px;
     text-align:center;
     cursor:pointer;
-    border:1px solid rgba(255,255,255,.05);
     transition:.2s;
-    position:relative;
-    z-index:2;
 }
 
 .sos-btn.active{
@@ -166,7 +140,7 @@ body{
 }
 
 .sos-btn i{
-    font-size:24px;
+    font-size:25px;
 }
 
 .sos-btn span{
@@ -181,21 +155,19 @@ body{
     gap:10px;
     background:var(--card);
     padding:5px;
-    border-radius:15px;
+    border-radius:16px;
     margin-bottom:20px;
 }
 
 .tab{
     flex:1;
-    text-align:center;
     padding:12px;
     border-radius:12px;
+    text-align:center;
     font-size:12px;
     font-weight:700;
     color:var(--muted);
     cursor:pointer;
-    position:relative;
-    z-index:2;
 }
 
 .tab.active{
@@ -205,15 +177,14 @@ body{
 
 .card{
     background:var(--card);
+    border-radius:25px;
     padding:20px;
-    border-radius:22px;
-    margin-bottom:20px;
 }
 
 .title{
     font-size:13px;
     font-weight:800;
-    margin-bottom:18px;
+    margin-bottom:20px;
 }
 
 .input-group{
@@ -224,22 +195,22 @@ body{
     display:block;
     margin-bottom:8px;
     font-size:11px;
-    color:var(--muted);
     font-weight:700;
+    color:var(--muted);
 }
 
 .input-group input,
 .input-group select{
     width:100%;
-    padding:14px;
-    border-radius:12px;
-    border:1px solid #333;
-    background:#151515;
-    color:white;
+    padding:15px;
+    border:none;
     outline:none;
+    background:#151515;
+    border-radius:14px;
+    color:white;
 }
 
-.btn-primary{
+.btn{
     width:100%;
     padding:15px;
     border:none;
@@ -248,16 +219,15 @@ body{
     color:white;
     font-weight:800;
     cursor:pointer;
-    position:relative;
-    z-index:2;
+    font-size:14px;
 }
 
 .result{
     display:none;
-    background:var(--card);
-    padding:15px;
-    border-radius:20px;
     margin-top:20px;
+    background:#151515;
+    border-radius:20px;
+    padding:15px;
 }
 
 .result img{
@@ -272,35 +242,16 @@ body{
 }
 
 .result a{
-    text-decoration:none;
     display:block;
+    text-decoration:none;
     text-align:center;
 }
 
 .footer{
     text-align:center;
-    font-size:11px;
+    margin-top:25px;
     color:var(--muted);
-    margin-top:20px;
-}
-
-.ripple{
-    overflow:hidden;
-}
-
-.ripple span{
-    position:absolute;
-    border-radius:50%;
-    background:rgba(255,255,255,.3);
-    transform:scale(0);
-    animation:ripple .6s linear;
-}
-
-@keyframes ripple{
-    to{
-        transform:scale(4);
-        opacity:0;
-    }
+    font-size:11px;
 }
 
 .toast{
@@ -310,10 +261,10 @@ body{
     transform:translateX(-50%);
     padding:12px 20px;
     border-radius:12px;
+    color:white;
     font-size:12px;
     font-weight:700;
     z-index:9999;
-    color:white;
 }
 
 </style>
@@ -324,67 +275,93 @@ body{
 <div class="app">
 
 <div class="header">
-<button class="btn-icon ripple" id="refreshBtn">
-<i class="ri-refresh-line"></i>
-</button>
-
 <div class="logo">
 DOKS DOWNLOADER
 </div>
-
-<button class="btn-icon ripple" id="scrollTopBtn">
-<i class="ri-arrow-up-line"></i>
-</button>
 </div>
 
-<div class="content" id="content">
+<div class="content">
 
 <div class="brand">
+
 <div class="profile">
 
 <img src="https://files.catbox.moe/gsy8am.jpg">
 
 <div>
-<h2 id="brandTitle">YOUTUBE Downloader</h2>
-<p>Doks • Multi Downloader</p>
+<h2 id="brandTitle">YOUTUBE DOWNLOADER</h2>
+<p>Doks Multi Downloader</p>
 </div>
 
 </div>
 
 <div class="marquee">
 <span>
-🚀 Fast Download • TikTok • Instagram • Facebook • YouTube • MP4 • MP3 • No Ads
+🚀 Fast Download • YouTube • TikTok • MP4 • MP3 • No Ads
 </span>
 </div>
+
 </div>
 
 <div class="sosmed">
 
-<div class="sos-btn active ripple" data-sosmed="youtube">
-<i class="ri-youtube-fill" style="color:red;"></i>
+<div class="sos-btn active"
+data-sosmed="youtube">
+
+<i class="ri-youtube-fill"
+style="color:red;"></i>
+
 <span>YouTube</span>
+
 </div>
 
-<div class="sos-btn ripple" data-sosmed="facebook">
-<i class="ri-facebook-circle-fill" style="color:#1877f2;"></i>
-<span>Facebook</span>
-</div>
+<div class="sos-btn"
+data-sosmed="tiktok">
 
-<div class="sos-btn ripple" data-sosmed="instagram">
-<i class="ri-instagram-line" style="color:#e4405f;"></i>
-<span>Instagram</span>
-</div>
-
-<div class="sos-btn ripple" data-sosmed="tiktok">
 <i class="ri-tiktok-fill"></i>
+
 <span>TikTok</span>
+
+</div>
+
+<div class="sos-btn"
+data-sosmed="instagram">
+
+<i class="ri-instagram-line"
+style="color:#e4405f;"></i>
+
+<span>Instagram</span>
+
+</div>
+
+<div class="sos-btn"
+data-sosmed="facebook">
+
+<i class="ri-facebook-circle-fill"
+style="color:#1877f2;"></i>
+
+<span>Facebook</span>
+
 </div>
 
 </div>
 
 <div class="tabs">
-<div class="tab active" data-tab="mp4">VIDEO MP4</div>
-<div class="tab" data-tab="mp3">AUDIO MP3</div>
+
+<div class="tab active"
+data-tab="mp4">
+
+VIDEO MP4
+
+</div>
+
+<div class="tab"
+data-tab="mp3">
+
+AUDIO MP3
+
+</div>
+
 </div>
 
 <div id="mp4Page">
@@ -396,12 +373,17 @@ DOWNLOAD VIDEO
 </div>
 
 <div class="input-group">
+
 <label>Link Video</label>
-<input type="text" id="mp4Url"
+
+<input type="text"
+id="mp4Url"
 placeholder="Tempel link video...">
+
 </div>
 
 <div class="input-group">
+
 <label>Resolusi</label>
 
 <select id="mp4Quality">
@@ -413,17 +395,22 @@ placeholder="Tempel link video...">
 
 </div>
 
-<button class="btn-primary ripple" id="mp4Btn">
+<button class="btn"
+id="mp4Btn">
+
 DOWNLOAD VIDEO
+
 </button>
 
-<div class="result" id="mp4Result"></div>
+<div class="result"
+id="mp4Result"></div>
 
 </div>
 
 </div>
 
-<div id="mp3Page" style="display:none;">
+<div id="mp3Page"
+style="display:none;">
 
 <div class="card">
 
@@ -432,15 +419,18 @@ DOWNLOAD AUDIO
 </div>
 
 <div class="input-group">
-<label>Link Audio / Video</label>
 
-<input type="text" id="mp3Url"
+<label>Link Video</label>
+
+<input type="text"
+id="mp3Url"
 placeholder="Tempel link...">
+
 </div>
 
 <div class="input-group">
 
-<label>Kualitas MP3</label>
+<label>Kualitas</label>
 
 <select id="mp3Quality">
 <option value="320">320kbps</option>
@@ -450,18 +440,22 @@ placeholder="Tempel link...">
 
 </div>
 
-<button class="btn-primary ripple" id="mp3Btn">
+<button class="btn"
+id="mp3Btn">
+
 DOWNLOAD MP3
+
 </button>
 
-<div class="result" id="mp3Result"></div>
+<div class="result"
+id="mp3Result"></div>
 
 </div>
 
 </div>
 
 <div class="footer">
-Created with ❤️ by Doks • © 2026
+Created with ❤️ by Doks © 2026
 </div>
 
 </div>
@@ -472,14 +466,14 @@ Created with ❤️ by Doks • © 2026
 
 let currentSosmed = 'youtube';
 
-function showToast(msg,isError=false){
+function toast(msg,error=false){
 
     const t = document.createElement('div');
 
     t.className = 'toast';
 
     t.style.background =
-    isError ? '#ef4444' : '#10b981';
+    error ? '#ef4444' : '#10b981';
 
     t.innerText = msg;
 
@@ -490,66 +484,56 @@ function showToast(msg,isError=false){
     },2500);
 }
 
-function extractVideoId(url){
+document.querySelectorAll('.sos-btn')
+.forEach(btn=>{
 
-    const patterns = [
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?#]+)/,
-        /youtube\.com\/shorts\/([^&?#]+)/
-    ];
-
-    for(const p of patterns){
-        const m = url.match(p);
-        if(m) return m[1];
-    }
-
-    return null;
-}
-
-document.querySelectorAll('.sos-btn').forEach(btn=>{
-
-    btn.addEventListener('click',()=>{
+    btn.onclick = ()=>{
 
         document.querySelectorAll('.sos-btn')
         .forEach(b=>b.classList.remove('active'));
 
         btn.classList.add('active');
 
-        currentSosmed = btn.dataset.sosmed;
+        currentSosmed =
+        btn.dataset.sosmed;
 
         document.getElementById('brandTitle')
         .innerText =
-        currentSosmed.toUpperCase() + ' Downloader';
-
-    });
-
+        currentSosmed.toUpperCase()
+        + ' DOWNLOADER';
+    };
 });
 
-document.querySelectorAll('.tab').forEach(tab=>{
+document.querySelectorAll('.tab')
+.forEach(tab=>{
 
-    tab.addEventListener('click',()=>{
+    tab.onclick = ()=>{
 
         document.querySelectorAll('.tab')
         .forEach(t=>t.classList.remove('active'));
 
         tab.classList.add('active');
 
-        const target = tab.dataset.tab;
+        const target =
+        tab.dataset.tab;
 
         document.getElementById('mp4Page')
         .style.display =
-        target === 'mp4' ? 'block' : 'none';
+        target === 'mp4'
+        ? 'block'
+        : 'none';
 
         document.getElementById('mp3Page')
         .style.display =
-        target === 'mp3' ? 'block' : 'none';
-
-    });
-
+        target === 'mp3'
+        ? 'block'
+        : 'none';
+    };
 });
 
 async function performDownload(type){
 
-    const urlInput =
+    const input =
     type === 'mp4'
     ? document.getElementById('mp4Url')
     : document.getElementById('mp3Url');
@@ -559,15 +543,13 @@ async function performDownload(type){
     ? document.getElementById('mp4Result')
     : document.getElementById('mp3Result');
 
-    const quality =
-    type === 'mp4'
-    ? document.getElementById('mp4Quality').value
-    : document.getElementById('mp3Quality').value;
-
-    const url = urlInput.value.trim();
+    const url =
+    input.value.trim();
 
     if(!url){
-        showToast("Masukkan URL!",true);
+
+        toast("Masukkan URL!",true);
+
         return;
     }
 
@@ -575,12 +557,14 @@ async function performDownload(type){
 
     resultDiv.innerHTML = `
     <div style="text-align:center;padding:20px;">
-    <i class="ri-loader-4-line ri-spin"
-    style="font-size:28px;color:#8b5cf6;"></i>
 
-    <p style="margin-top:10px;font-size:12px;">
-    Memproses download...
+    <i class="ri-loader-4-line ri-spin"
+    style="font-size:30px;color:#8b5cf6;"></i>
+
+    <p style="margin-top:10px;">
+    Memproses...
     </p>
+
     </div>
     `;
 
@@ -588,60 +572,83 @@ async function performDownload(type){
 
         let apiUrl = '';
 
+        // YOUTUBE
         if(currentSosmed === 'youtube'){
 
-            if(type === 'mp3'){
-
-                apiUrl =
-                `https://api.nexray.eu.cc/downloader/v1/ytmp3?url=${encodeURIComponent(url)}`;
-
-            }else{
-
-                apiUrl =
-                `https://api.nexray.eu.cc/downloader/ytmp4?url=${encodeURIComponent(url)}&resolusi=${quality}`;
-            }
-
-        }else if(
-            currentSosmed === 'instagram' ||
-            currentSosmed === 'facebook'
-        ){
-
             apiUrl =
-            `https://api.vreden.web.id/api/down?url=${encodeURIComponent(url)}`;
-
-        }else if(currentSosmed === 'tiktok'){
-
-            apiUrl =
-            `https://api.nexray.eu.cc/downloader/tiktok?url=${encodeURIComponent(url)}`;
+            `https://api.agatz.xyz/api/${type === 'mp3' ? 'ytmp3' : 'ytmp4'}?url=${encodeURIComponent(url)}`;
         }
 
-        const response = await fetch(apiUrl);
+        // TIKTOK
+        else if(currentSosmed === 'tiktok'){
 
-        const data = await response.json();
+            apiUrl =
+            `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
+        }
+
+        // INSTAGRAM
+        else if(currentSosmed === 'instagram'){
+
+            apiUrl =
+            `https://api.agatz.xyz/api/igdl?url=${encodeURIComponent(url)}`;
+        }
+
+        // FACEBOOK
+        else if(currentSosmed === 'facebook'){
+
+            apiUrl =
+            `https://api.agatz.xyz/api/fbdl?url=${encodeURIComponent(url)}`;
+        }
+
+        const response =
+        await fetch(apiUrl);
+
+        const data =
+        await response.json();
+
+        console.log(data);
 
         const result =
-        data.result || data.data || data;
+        data.data ||
+        data.result ||
+        data;
 
-        const downloadUrl =
-        result.url ||
-        result.video ||
-        result.audio ||
-        result.mp4 ||
-        result.mp3;
+        let downloadUrl = '';
+
+        // TIKTOK
+        if(currentSosmed === 'tiktok'){
+
+            downloadUrl =
+            result.play ||
+            result.wmplay ||
+            result.music;
+
+        }else{
+
+            downloadUrl =
+            result.download ||
+            result.url ||
+            result.video ||
+            result.audio ||
+            result.mp4 ||
+            result.mp3;
+        }
 
         if(!downloadUrl){
+
             throw new Error();
         }
 
         const thumb =
+        result.cover ||
         result.thumbnail ||
         result.thumb ||
-        (currentSosmed === 'youtube'
-        ? `https://img.youtube.com/vi/${extractVideoId(url)}/hqdefault.jpg`
-        : 'https://files.catbox.moe/gsy8am.jpg');
+        'https://files.catbox.moe/gsy8am.jpg';
 
         const title =
-        result.title || 'Downloader Result';
+        result.title ||
+        result.fullTitle ||
+        'Downloader Result';
 
         resultDiv.innerHTML = `
 
@@ -651,93 +658,49 @@ async function performDownload(type){
 
         <a href="${downloadUrl}"
         target="_blank"
-        class="btn-primary">
+        class="btn">
 
         DOWNLOAD SEKARANG
 
         </a>
         `;
 
-        showToast("Berhasil diproses!");
+        toast("Berhasil!");
 
     }catch(err){
+
+        console.log(err);
 
         resultDiv.innerHTML = `
         <div style="text-align:center;padding:20px;">
 
         <i class="ri-error-warning-fill"
-        style="font-size:30px;color:#ef4444;"></i>
+        style="font-size:35px;color:red;"></i>
 
-        <p style="margin-top:10px;font-size:12px;">
+        <p style="margin-top:10px;">
         Gagal mengambil data.
         </p>
 
         </div>
         `;
 
-        showToast("Terjadi kesalahan!",true);
+        toast("Terjadi kesalahan!",true);
     }
 }
 
 document.getElementById('mp4Btn')
-.addEventListener('click',()=>{
+.onclick = ()=>{
 
     performDownload('mp4');
-
-});
+};
 
 document.getElementById('mp3Btn')
-.addEventListener('click',()=>{
+.onclick = ()=>{
 
     performDownload('mp3');
-
-});
-
-document.getElementById('refreshBtn')
-.addEventListener('click',()=>{
-
-    location.reload();
-
-});
-
-document.getElementById('scrollTopBtn')
-.addEventListener('click',()=>{
-
-    document.getElementById('content')
-    .scrollTo({
-        top:0,
-        behavior:'smooth'
-    });
-
-});
-
-document.querySelectorAll('.ripple').forEach(button=>{
-
-    button.addEventListener('click',function(e){
-
-        const ripple =
-        document.createElement('span');
-
-        const rect =
-        button.getBoundingClientRect();
-
-        ripple.style.left =
-        (e.clientX - rect.left) + 'px';
-
-        ripple.style.top =
-        (e.clientY - rect.top) + 'px';
-
-        this.appendChild(ripple);
-
-        setTimeout(()=>{
-            ripple.remove();
-        },600);
-
-    });
-
-});
+};
 
 </script>
 
 </body>
-  </html>
+</html>
