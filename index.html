@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Multi Downloader - Doks</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg-main:#0f0f0f;
+    --bg-deep:#080808;
+    --card:#1e1e1e;
+    --text:#f3f4f6;
+    --muted:#9ca3af;
+    --accent:linear-gradient(45deg,#8b5cf6,#f97316,#3b82f6);
+    --accent-solid:#8b5cf6;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+    background:var(--bg-deep);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.app{
+    width:100%;
+    max-width:480px;
+    height:100vh;
+    background:var(--bg-main);
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+}
+
+.header{
+    padding:18px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.logo{
+    font-weight:800;
+    font-size:16px;
+    background:var(--accent);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.btn-icon{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    border:none;
+    background:#1b1b1b;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+    position:relative;
+    z-index:2;
+}
+
+.content{
+    flex:1;
+    overflow-y:auto;
+    padding:20px;
+}
+
+.content::-webkit-scrollbar{
+    display:none;
+}
+
+.brand{
+    background:var(--card);
+    padding:18px;
+    border-radius:22px;
+    margin-bottom:20px;
+}
+
+.profile{
+    display:flex;
+    gap:14px;
+    align-items:center;
+}
+
+.profile img{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    border:2px solid #8b5cf6;
+    object-fit:cover;
+}
+
+.profile h2{
+    font-size:17px;
+}
+
+.profile p{
+    font-size:12px;
+    color:var(--muted);
+}
+
+.marquee{
+    margin-top:15px;
+    overflow:hidden;
+    white-space:nowrap;
+    background:#151515;
+    border-radius:10px;
+    padding:10px 0;
+}
+
+.marquee span{
+    display:inline-block;
+    padding-left:100%;
+    animation:marquee 15s linear infinite;
+    font-size:11px;
+    color:var(--muted);
+}
+
+@keyframes marquee{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-100%);}
+}
+
+.sosmed{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.sos-btn{
+    background:var(--card);
+    padding:14px 5px;
+    border-radius:16px;
+    text-align:center;
+    cursor:pointer;
+    border:1px solid rgba(255,255,255,.05);
+    transition:.2s;
+    position:relative;
+    z-index:2;
+}
+
+.sos-btn.active{
+    background:var(--accent);
+}
+
+.sos-btn i{
+    font-size:24px;
+}
+
+.sos-btn span{
+    display:block;
+    margin-top:5px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.tabs{
+    display:flex;
+    gap:10px;
+    background:var(--card);
+    padding:5px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+.tab{
+    flex:1;
+    text-align:center;
+    padding:12px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:700;
+    color:var(--muted);
+    cursor:pointer;
+    position:relative;
+    z-index:2;
+}
+
+.tab.active{
+    background:#111;
+    color:white;
+}
+
+.card{
+    background:var(--card);
+    padding:20px;
+    border-radius:22px;
+    margin-bottom:20px;
+}
+
+.title{
+    font-size:13px;
+    font-weight:800;
+    margin-bottom:18px;
+}
+
+.input-group{
+    margin-bottom:15px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:8px;
+    font-size:11px;
+    color:var(--muted);
+    font-weight:700;
+}
+
+.input-group input,
+.input-group select{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #333;
+    background:#151515;
+    color:white;
+    outline:none;
+}
+
+.btn-primary{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:14px;
+    background:var(--accent);
+    color:white;
+    font-weight:800;
+    cursor:pointer;
+    position:relative;
+    z-index:2;
+}
+
+.result{
+    display:none;
+    background:var(--card);
+    padding:15px;
+    border-radius:20px;
+    margin-top:20px;
+}
+
+.result img{
+    width:100%;
+    border-radius:15px;
+    margin-bottom:15px;
+}
+
+.result h3{
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+.result a{
+    text-decoration:none;
+    display:block;
+    text-align:center;
+}
+
+.footer{
+    text-align:center;
+    font-size:11px;
+    color:var(--muted);
+    margin-top:20px;
+}
+
+.ripple{
+    overflow:hidden;
+}
+
+.ripple span{
+    position:absolute;
+    border-radius:50%;
+    background:rgba(255,255,255,.3);
+    transform:scale(0);
+    animation:ripple .6s linear;
+}
+
+@keyframes ripple{
+    to{
+        transform:scale(4);
+        opacity:0;
+    }
+}
+
+.toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:12px 20px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:700;
+    z-index:9999;
+    color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="header">
+<button class="btn-icon ripple" id="refreshBtn">
+<i class="ri-refresh-line"></i>
+</button>
+
+<div class="logo">
+DOKS DOWNLOADER
+</div>
+
+<button class="btn-icon ripple" id="scrollTopBtn">
+<i class="ri-arrow-up-line"></i>
+</button>
+</div>
+
+<div class="content" id="content">
+
+<div class="brand">
+<div class="profile">
+
+<img src="https://files.catbox.moe/gsy8am.jpg">
+
+<div>
+<h2 id="brandTitle">YOUTUBE Downloader</h2>
+<p>Doks • Multi Downloader</p>
+</div>
+
+</div>
+
+<div class="marquee">
+<span>
+🚀 Fast Download • TikTok • Instagram • Facebook • YouTube • MP4 • MP3 • No Ads
+</span>
+</div>
+</div>
+
+<div class="sosmed">
+
+<div class="sos-btn active ripple" data-sosmed="youtube">
+<i class="ri-youtube-fill" style="color:red;"></i>
+<span>YouTube</span>
+</div>
+
+<div class="sos-btn ripple" data-sosmed="facebook">
+<i class="ri-facebook-circle-fill" style="color:#1877f2;"></i>
+<span>Facebook</span>
+</div>
+
+<div class="sos-btn ripple" data-sosmed="instagram">
+<i class="ri-instagram-line" style="color:#e4405f;"></i>
+<span>Instagram</span>
+</div>
+
+<div class="sos-btn ripple" data-sosmed="tiktok">
+<i class="ri-tiktok-fill"></i>
+<span>TikTok</span>
+</div>
+
+</div>
+
+<div class="tabs">
+<div class="tab active" data-tab="mp4">VIDEO MP4</div>
+<div class="tab" data-tab="mp3">AUDIO MP3</div>
+</div>
+
+<div id="mp4Page">
+
+<div class="card">
+
+<div class="title">
+DOWNLOAD VIDEO
+</div>
+
+<div class="input-group">
+<label>Link Video</label>
+<input type="text" id="mp4Url"
+placeholder="Tempel link video...">
+</div>
+
+<div class="input-group">
+<label>Resolusi</label>
+
+<select id="mp4Quality">
+<option value="1080">1080p</option>
+<option value="720" selected>720p</option>
+<option value="480">480p</option>
+<option value="360">360p</option>
+</select>
+
+</div>
+
+<button class="btn-primary ripple" id="mp4Btn">
+DOWNLOAD VIDEO
+</button>
+
+<div class="result" id="mp4Result"></div>
+
+</div>
+
+</div>
+
+<div id="mp3Page" style="display:none;">
+
+<div class="card">
+
+<div class="title">
+DOWNLOAD AUDIO
+</div>
+
+<div class="input-group">
+<label>Link Audio / Video</label>
+
+<input type="text" id="mp3Url"
+placeholder="Tempel link...">
+</div>
+
+<div class="input-group">
+
+<label>Kualitas MP3</label>
+
+<select id="mp3Quality">
+<option value="320">320kbps</option>
+<option value="192" selected>192kbps</option>
+<option value="128">128kbps</option>
+</select>
+
+</div>
+
+<button class="btn-primary ripple" id="mp3Btn">
+DOWNLOAD MP3
+</button>
+
+<div class="result" id="mp3Result"></div>
+
+</div>
+
+</div>
+
+<div class="footer">
+Created with ❤️ by Doks • © 2026
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let currentSosmed = 'youtube';
+
+function showToast(msg,isError=false){
+
+    const t = document.createElement('div');
+
+    t.className = 'toast';
+
+    t.style.background =
+    isError ? '#ef4444' : '#10b981';
+
+    t.innerText = msg;
+
+    document.body.appendChild(t);
+
+    setTimeout(()=>{
+        t.remove();
+    },2500);
+}
+
+function extractVideoId(url){
+
+    const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?#]+)/,
+        /youtube\.com\/shorts\/([^&?#]+)/
+    ];
+
+    for(const p of patterns){
+        const m = url.match(p);
+        if(m) return m[1];
+    }
+
+    return null;
+}
+
+document.querySelectorAll('.sos-btn').forEach(btn=>{
+
+    btn.addEventListener('click',()=>{
+
+        document.querySelectorAll('.sos-btn')
+        .forEach(b=>b.classList.remove('active'));
+
+        btn.classList.add('active');
+
+        currentSosmed = btn.dataset.sosmed;
+
+        document.getElementById('brandTitle')
+        .innerText =
+        currentSosmed.toUpperCase() + ' Downloader';
+
+    });
+
+});
+
+document.querySelectorAll('.tab').forEach(tab=>{
+
+    tab.addEventListener('click',()=>{
+
+        document.querySelectorAll('.tab')
+        .forEach(t=>t.classList.remove('active'));
+
+        tab.classList.add('active');
+
+        const target = tab.dataset.tab;
+
+        document.getElementById('mp4Page')
+        .style.display =
+        target === 'mp4' ? 'block' : 'none';
+
+        document.getElementById('mp3Page')
+        .style.display =
+        target === 'mp3' ? 'block' : 'none';
+
+    });
+
+});
+
+async function performDownload(type){
+
+    const urlInput =
+    type === 'mp4'
+    ? document.getElementById('mp4Url')
+    : document.getElementById('mp3Url');
+
+    const resultDiv =
+    type === 'mp4'
+    ? document.getElementById('mp4Result')
+    : document.getElementById('mp3Result');
+
+    const quality =
+    type === 'mp4'
+    ? document.getElementById('mp4Quality').value
+    : document.getElementById('mp3Quality').value;
+
+    const url = urlInput.value.trim();
+
+    if(!url){
+        showToast("Masukkan URL!",true);
+        return;
+    }
+
+    resultDiv.style.display = 'block';
+
+    resultDiv.innerHTML = `
+    <div style="text-align:center;padding:20px;">
+    <i class="ri-loader-4-line ri-spin"
+    style="font-size:28px;color:#8b5cf6;"></i>
+
+    <p style="margin-top:10px;font-size:12px;">
+    Memproses download...
+    </p>
+    </div>
+    `;
+
+    try{
+
+        let apiUrl = '';
+
+        if(currentSosmed === 'youtube'){
+
+            if(type === 'mp3'){
+
+                apiUrl =
+                `https://api.nexray.eu.cc/downloader/v1/ytmp3?url=${encodeURIComponent(url)}`;
+
+            }else{
+
+                apiUrl =
+                `https://api.nexray.eu.cc/downloader/ytmp4?url=${encodeURIComponent(url)}&resolusi=${quality}`;
+            }
+
+        }else if(
+            currentSosmed === 'instagram' ||
+            currentSosmed === 'facebook'
+        ){
+
+            apiUrl =
+            `https://api.vreden.web.id/api/down?url=${encodeURIComponent(url)}`;
+
+        }else if(currentSosmed === 'tiktok'){
+
+            apiUrl =
+            `https://api.nexray.eu.cc/downloader/tiktok?url=${encodeURIComponent(url)}`;
+        }
+
+        const response = await fetch(apiUrl);
+
+        const data = await response.json();
+
+        const result =
+        data.result || data.data || data;
+
+        const downloadUrl =
+        result.url ||
+        result.video ||
+        result.audio ||
+        result.mp4 ||
+        result.mp3;
+
+        if(!downloadUrl){
+            throw new Error();
+        }
+
+        const thumb =
+        result.thumbnail ||
+        result.thumb ||
+        (currentSosmed === 'youtube'
+        ? `https://img.youtube.com/vi/${extractVideoId(url)}/hqdefault.jpg`
+        : 'https://files.catbox.moe/gsy8am.jpg');
+
+        const title =
+        result.title || 'Downloader Result';
+
+        resultDiv.innerHTML = `
+
+        <img src="${thumb}">
+
+        <h3>${title}</h3>
+
+        <a href="${downloadUrl}"
+        target="_blank"
+        class="btn-primary">
+
+        DOWNLOAD SEKARANG
+
+        </a>
+        `;
+
+        showToast("Berhasil diproses!");
+
+    }catch(err){
+
+        resultDiv.innerHTML = `
+        <div style="text-align:center;padding:20px;">
+
+        <i class="ri-error-warning-fill"
+        style="font-size:30px;color:#ef4444;"></i>
+
+        <p style="margin-top:10px;font-size:12px;">
+        Gagal mengambil data.
+        </p>
+
+        </div>
+        `;
+
+        showToast("Terjadi kesalahan!",true);
+    }
+}
+
+document.getElementById('mp4Btn')
+.addEventListener('click',()=>{
+
+    performDownload('mp4');
+
+});
+
+document.getElementById('mp3Btn')
+.addEventListener('click',()=>{
+
+    performDownload('mp3');
+
+});
+
+document.getElementById('refreshBtn')
+.addEventListener('click',()=>{
+
+    location.reload();
+
+});
+
+document.getElementById('scrollTopBtn')
+.addEventListener('click',()=>{
+
+    document.getElementById('content')
+    .scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+
+});
+
+document.querySelectorAll('.ripple').forEach(button=>{
+
+    button.addEventListener('click',function(e){
+
+        const ripple =
+        document.createElement('span');
+
+        const rect =
+        button.getBoundingClientRect();
+
+        ripple.style.left =
+        (e.clientX - rect.left) + 'px';
+
+        ripple.style.top =
+        (e.clientY - rect.top) + 'px';
+
+        this.appendChild(ripple);
+
+        setTimeout(()=>{
+            ripple.remove();
+        },600);
+
+    });
+
+});
+
+</script>
+
+</body>
+  </html>
